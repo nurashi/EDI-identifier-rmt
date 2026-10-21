@@ -1,34 +1,30 @@
-# EDI-identifier
+# Partner-specific requirement divergence in X12 214 guides
 
-Toolkit for automated comparison of ANSI X12 EDI implementation guides, with an investigation into partner-specific implementation divergence in freight logistics.
+Study for the course Research Methods and Tools, Astana IT University, group SE-2405. Team: Nurassyl Orazbek, Anuar Zhenissov.
 
-Diploma project, Astana IT University, group SE-2405.
+Research question: how consistently can a shared, evidence-linked classification scheme identify and categorize partner-specific requirement differences across comparable ANSI X12 214 (004010) truckload implementation guides?
 
-The first stage covers X12 214 Transportation Carrier Shipment Status Message, release 004010. Transaction sets 204 and 210 are planned extensions.
+The repository started as a copy of [nurashi/EDI-identifier](https://github.com/nurashi/EDI-identifier) at commit 5e9de2b and keeps its history.
 
-## Components
+## Contents
 
-| Directory | Component | Stack | Owner |
-|---|---|---|---|
-| `extractor/` | Requirement extraction and normalization from PDF guides | Python, PyMuPDF, pdfplumber, Pydantic | Anuar Zhenissov |
-| `backend/` | Requirement store, comparison engine, X12 message validation, REST API | Go, Gin, PostgreSQL | Nurassyl Orazbek |
-| `frontend/` | Side-by-side divergence viewer and annotation UI | TypeScript, React | Asylan Usen |
-| `corpus/` | Guide selection, reference corpus and annotations | Git, Python | Asylan Usen |
-| `evaluation/` | Precision, recall, F1 and inter-annotator agreement | Python, pandas, scikit-learn | Nurassyl Orazbek, Asylan Usen |
+| Path | What |
+|---|---|
+| `schema/` | JSON schemas for a normalized guide and for one judgement on an aligned pair |
+| `docs/schema.md` | How guides are normalized |
+| `corpus/214-004010/guides/` | Three truckload 214/004010 guides (C.H. Robinson, KBX, Domtar), 118 requirements with page-cited excerpts |
+| `corpus/214-004010/annotation/sheet.csv` | 188 annotation units: aligned pair x category |
+| `docs/codebook.md` | Labelling rules |
+| `backend/cmd/study` | `evidence`, `align`, `sheet`, `agree` |
 
-## Pilot study
+## Reproduce
 
-The first research step tests whether two people can classify requirement differences between guides consistently. The pilot corpus, its scope and the commands that reproduce it are in [`corpus/214-004010`](corpus/214-004010/README.md); the labelling rules are in [`docs/codebook.md`](docs/codebook.md). `backend/cmd/study` checks the corpus against the source PDFs, aligns requirements across guides, writes the annotation sheet and computes agreement between coders.
+The commands are in [`corpus/214-004010/README.md`](corpus/214-004010/README.md). CI runs them on every push: the `pilot` job downloads the PDFs from their public URLs, checks hashes, page counts and every excerpt, aligns the guides and fails if the committed sheet differs from a regenerated one.
 
-## Running locally
+## Annotation
+
+Each coder labels a copy of `sheet.csv` named after them, following `docs/codebook.md`, without seeing the other sheet. Round 1 is C.H. Robinson ~ KBX, units U001–U072. Agreement:
 
 ```sh
-docker compose up --build
-curl localhost:8080/healthz
+./study agree -disagreements disagreements.csv corpus/214-004010/annotation/<coder-a>.csv corpus/214-004010/annotation/<coder-b>.csv
 ```
-
-## Workflow
-
-- One branch per task: `<area>/<short-description>`, for example `backend/requirement-schema`.
-- Changes reach `main` only through a pull request reviewed by another team member.
-- CI must pass before merge.
