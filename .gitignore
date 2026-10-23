@@ -19,3 +19,8 @@ __pycache__/
 node_modules/
 dist/
 coverage/
+
+# Assignment 3: private source PDFs and generated annotation/evidence files
+/rmt214/data/guides/
+/rmt214/out/
+/rmt214/test-results.xml
