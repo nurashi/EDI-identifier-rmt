@@ -16,13 +16,12 @@ The repository started as a copy of [nurashi/EDI-identifier](https://github.com/
 | `corpus/214-004010/annotation/sheet.csv` | 188 annotation units: aligned pair x category |
 | `docs/codebook.md` | Labelling rules |
 | `backend/cmd/study` | `evidence`, `align`, `sheet`, `agree` |
-| [Assignment 3](assignments/assignment-3/README.md) | Supplied DOCX report, original ZIP and Python prototype |
 
 ## Reproduce
 
 The commands are in [`corpus/214-004010/README.md`](corpus/214-004010/README.md). CI runs them on every push: the `pilot` job downloads the PDFs from their public URLs, checks hashes, page counts and every excerpt, aligns the guides and fails if the committed sheet differs from a regenerated one.
 
-The separate [Assignment 3 Python pipeline](rmt214/README.md) has its own setup and tests. Its position-level workbooks are not interchangeable with the Go pilot's pair/category annotation sheets.
+An earlier Python prototype with a different unit of analysis is kept on branch `assignment-3-python-pipeline`; it is not part of the study.
 
 ## Annotation
 
